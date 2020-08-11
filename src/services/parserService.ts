@@ -68,6 +68,13 @@ export default class parserService {
   }
 
   private static ParseStatus(data: string): trackStatus {
-    return new trackStatus();
+    const status = new trackStatus();
+    const binaryData = numberService.hexTobin(data);
+    status.IsFixed = Boolean(binaryData[0]);
+    status.IsHistory = Boolean(binaryData[1]);
+    status.IsTurnOn = Boolean(binaryData[2]);
+    status.IsLatPositive = Boolean(binaryData[3]);
+    status.IsLongPositive = Boolean(binaryData[4]);
+    return status;
   }
 }
