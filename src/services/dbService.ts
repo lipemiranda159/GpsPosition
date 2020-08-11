@@ -10,7 +10,11 @@ class dbService {
   constructor() {
     dotenv.config();
     this.allowedUserDevice = new Schema({
-      userId: {
+      username: {
+        type: String,
+        required: true,
+      },
+      password: {
         type: String,
         required: true,
       },
@@ -79,10 +83,15 @@ class dbService {
     }
   };
 
-  VerifyUserDevice = async (deviceId: string, userId: string) => {
+  VerifyUserDevice = async (
+    username: string,
+    password: string,
+    deviceId: string
+  ) => {
     const allowedUserDevice = await this.dbContext.findOne({
+      username,
+      password,
       deviceId,
-      userId,
     });
     if (allowedUserDevice) {
       return true;
