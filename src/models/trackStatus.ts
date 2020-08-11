@@ -1,7 +1,7 @@
 class trackStatus {
   IsFixed!: Boolean;
   IsHistory!: Boolean;
-  IsTurnIn!: Boolean;
+  IsTurnOn!: Boolean;
   IsLatPositive!: Boolean;
   IsLongPositive!: Boolean;
 }
