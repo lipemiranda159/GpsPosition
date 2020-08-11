@@ -1,27 +1,22 @@
 import protocolMessage from "../models/protocolMessage";
+import dbService from "./dbService";
+import projectConstants from "../constants/projectConstants";
+import parserService from "./parserService";
 
-const FOOTER_LENGTH = 4;
-const HEADER_LENGTH = 4;
-const END_DEVICEID = 10;
-const START_COMMAND = 10;
-const END_COMMAND = 12;
 const HEADER_VALUE = "50F7";
 const FOOTER_VALUE = "73C4";
-const PING_COMMAND = "01";
+
+const db = new dbService();
 
 class processorData {
-  public processMessage(data: string) {
-    const protocolMessage = this.ParseToModel(data);
-    if (this.DataIsValid(protocolMessage)) {
-      if (protocolMessage.Command === PING_COMMAND) {
-        return this.ProcessPing(protocolMessage);
-      }
-    }
+  private processLocation(protocolRequest: protocolMessage) {
+    const data = parserService.ParseToLocationData(protocolRequest.Data);
+    db.SaveLocationData(data);
   }
 
   private ProcessPing(protocolRequest: protocolMessage) {
     const protocolResponse = new protocolMessage(protocolRequest);
-    protocolResponse.Command = PING_COMMAND;
+    protocolResponse.Command = projectConstants.PING_COMMAND;
     return protocolResponse;
   }
   private DataIsValid(protocolMessage: protocolMessage) {
@@ -31,17 +26,25 @@ class processorData {
     );
   }
 
-  private ParseToModel(data: string) {
-    const requestData = new protocolMessage();
-    requestData.Header = data.substring(0, HEADER_LENGTH);
-    requestData.DeviceId = data.substring(HEADER_LENGTH, END_DEVICEID);
-    requestData.Command = data.substring(START_COMMAND, END_COMMAND);
-    requestData.Data = data.substring(END_COMMAND, data.length - FOOTER_LENGTH);
-    requestData.Footer = data.substring(
-      END_COMMAND + requestData.Data.length,
-      data.length
-    );
-    return requestData;
+  private verifyDeviceId(DeviceId: string) {
+    return db.ExistDevice(DeviceId);
+  }
+
+  public processMessage(data: string) {
+    const protocolMessage = parserService.ParseToProtocolMessage(data);
+    if (
+      this.DataIsValid(protocolMessage) &&
+      this.verifyDeviceId(protocolMessage.DeviceId)
+    ) {
+      switch (protocolMessage.Command) {
+        case projectConstants.PING_COMMAND:
+          return this.ProcessPing(protocolMessage);
+        case projectConstants.LOCATION_COMMAND:
+          return this.processLocation(protocolMessage);
+        default:
+          throw new InvalidCommandException();
+      }
+    }
   }
 }
 
