@@ -54,7 +54,11 @@ class dbService {
       });
 
       if (!this.createdModel) {
-        this.dbContext = mongoose.model("Bank", this.locationSchema, "Bank");
+        this.dbContext = mongoose.model(
+          "location",
+          this.locationSchema,
+          "location"
+        );
         this.createdModel = true;
       }
     } catch (error) {
@@ -62,11 +66,18 @@ class dbService {
       throw error;
     }
   };
-  public ExistDevice(deviceId: string) {
-    return true;
-  }
 
-  public SaveLocationData(location: locationData) {}
+  GetDeviceLocation = async (deviceId: string) => {
+    this.dbContext.findOne({}, {}, { sort: { date: -1 } }, function (
+      post: any
+    ) {
+      return post;
+    });
+  };
+
+  SaveLocationData = async (location: locationData) => {
+    this.dbContext.save(location);
+  };
 }
 
 export default dbService;
