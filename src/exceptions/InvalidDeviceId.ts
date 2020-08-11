@@ -1,0 +1,1 @@
+class InvalidDeviceIdException extends Error {}
