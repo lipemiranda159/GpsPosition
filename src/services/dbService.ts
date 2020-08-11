@@ -4,10 +4,22 @@ import dotenv from "dotenv";
 
 class dbService {
   private locationSchema: Schema;
+  private allowedUserDevice: Schema;
   private createdModel = false;
   private dbContext: any;
   constructor() {
     dotenv.config();
+    this.allowedUserDevice = new Schema({
+      userId: {
+        type: String,
+        required: true,
+      },
+      deviceId: {
+        type: String,
+        required: true,
+      },
+    });
+
     this.locationSchema = new Schema({
       date: {
         type: Date,
@@ -67,8 +79,18 @@ class dbService {
     }
   };
 
+  VerifyUserDevice = async (deviceId: string, userId: string) => {
+    const allowedUserDevice = await this.dbContext.findOne({
+      deviceId,
+      userId,
+    });
+    if (allowedUserDevice) {
+      return true;
+    } else return false;
+  };
+
   GetDeviceLocation = async (deviceId: string) => {
-    this.dbContext.findOne({}, {}, { sort: { date: -1 } }, function (
+    await this.dbContext.findOne({}, {}, { sort: { date: -1 } }, function (
       post: any
     ) {
       return post;
