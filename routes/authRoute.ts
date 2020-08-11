@@ -1,11 +1,11 @@
 import express from "express";
-const app = express();
+const authRoute = express.Router();
 import dotenv from "dotenv-safe";
 import jwt from "jsonwebtoken";
 import dbService from "../src/services/dbService";
 dotenv.config();
 
-app.post("/auth", (req, res, next) => {
+authRoute.post("/auth", (req, res, next) => {
   const db = new dbService();
   const { username, password, deviceId } = req.body;
   if (db.VerifyUserDevice(username, password, deviceId)) {
@@ -18,4 +18,4 @@ app.post("/auth", (req, res, next) => {
   res.status(500).json({ message: "Login inválido!" });
 });
 
-export { app as authRoute };
+export default authRoute;
