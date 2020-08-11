@@ -4,7 +4,7 @@ export default class locationData {
   Distance!: Number;
   Time!: Number;
   Status!: trackStatus;
-  Speed!: string;
+  Speed!: Number;
   Lat!: Number;
   Long!: Number;
 }
