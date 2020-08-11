@@ -27,7 +27,11 @@ class processorData {
   }
 
   private verifyDeviceId(DeviceId: string) {
-    return db.ExistDevice(DeviceId);
+    if (db.ExistDevice(DeviceId)) {
+      return true;
+    }
+
+    throw new InvalidDeviceIdException();
   }
 
   public processMessage(data: string) {
