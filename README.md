@@ -49,4 +49,4 @@ MONGO_PASSWORD=
 
 ### 4) Future features
 
-- Implemente queue to process locations received from device
+- Implement queue to process locations received from device
