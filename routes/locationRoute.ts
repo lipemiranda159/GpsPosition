@@ -1,3 +1,7 @@
 import express from "express";
-const app = express();
-export { app as locationRoute };
+import locationController from "../src/controllers/locationController";
+const locationRoute = express.Router();
+const locController = new locationController();
+locationRoute.get("/location/:deviceId", locController.getLocation);
+
+export default locationRoute;
