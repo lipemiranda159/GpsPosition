@@ -2,8 +2,8 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import authMiddleware from "./middleware/authMiddleware";
-import authRoute from "../routes/authRoute";
-import locationRoute from "../routes/locationRoute";
+import authRoute from "./routes/authRoute";
+import locationRoute from "./routes/locationRoute";
 const app = express();
 
 app.use(bodyParser.json());
